@@ -17,7 +17,8 @@ class Booking extends Model
         'status',
         'add_recording',
         'music_equipment',
-        'total_price'
+        'total_price',
+        'snap_token'
     ];
 
     protected $casts = [

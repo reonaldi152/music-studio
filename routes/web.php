@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
 
 // Landing page
 // Route::get('/', function () {
@@ -102,9 +103,17 @@ Route::get('/services', function () {
     return view('services');
 })->name('services');
 
-// Pemesanan (Booking)
 Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
-Route::get('/booking/{studio}', [BookingController::class, 'create'])->name('booking.create');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/booking/{studio}', [BookingController::class, 'create'])->name('booking.create');
+    Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking/checkout/{id}', [BookingController::class, 'checkout'])->name('booking.checkout');
+    Route::post('/midtrans-callback', [BookingController::class, 'callback']);
+
+    Route::post('/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+    Route::post('/payment/notification', [PaymentController::class, 'handleNotification']);
+});
 
 
 

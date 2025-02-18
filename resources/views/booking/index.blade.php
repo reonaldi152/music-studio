@@ -14,7 +14,7 @@
             <!-- Loop Studio -->
             @foreach($studios as $studio)
             <div class="relative overflow-hidden bg-gray-800 rounded-lg shadow-lg group">
-                <img src="{{ asset('images/studio.jpg') }}" alt="Studio Musik"
+                <img src="{{asset('storage/' . $studio->image) }}" alt="Studio Musik"
                     class="object-cover w-full h-64 transition duration-300 group-hover:scale-105 group-hover:opacity-80">
                 <div class="absolute inset-0 bg-black opacity-40"></div>
                 <div class="absolute text-white bottom-6 left-6">

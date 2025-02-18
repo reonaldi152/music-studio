@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\StudioResource\Pages;
-use App\Models\Studio;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Studio;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
+use App\Filament\Resources\StudioResource\Pages;
 
 class StudioResource extends Resource
 {
@@ -34,6 +36,12 @@ class StudioResource extends Resource
                         ->prefix('Rp ')
                         ->numeric()
                         ->required(),
+                    FileUpload::make('image')
+                        ->disk('public')
+                        ->directory('studio')
+                        ->image()
+                        ->required(),
+    
                 ])
             ]);
     }
@@ -43,6 +51,10 @@ class StudioResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->label('Nama Studio')->sortable(),
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->width(100)
+                    ->height(100),
                 TextColumn::make('price_per_hour')->label('Harga per Jam (Rp)')->sortable(),
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime(),
             ])

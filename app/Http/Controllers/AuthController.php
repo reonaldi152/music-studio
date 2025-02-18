@@ -33,7 +33,7 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard')->with('success', 'Login berhasil!');
+            return redirect()->intended('/')->with('success', 'Login berhasil!');
         }
 
         // Jika gagal, kirim error
@@ -72,7 +72,7 @@ class AuthController extends Controller
         // Login user setelah registrasi
         Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Registrasi berhasil! Selamat datang.');
+        return redirect('/login')->with('success', 'Registrasi berhasil! Selamat datang.');
     }
 
     /**

@@ -10,6 +10,7 @@ class Studio extends Model
     use HasFactory;
 
     protected $fillable = [
+        'image',
         'name',
         'description',
         'price_per_hour'

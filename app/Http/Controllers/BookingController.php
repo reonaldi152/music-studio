@@ -6,6 +6,9 @@ use App\Models\Studio;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Snap;
+use Midtrans\Config;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -65,6 +68,83 @@ class BookingController extends Controller
     {
         $studio = Studio::findOrFail($studio_id);
         return view('booking.create', compact('studio'));
+    }
+
+    /**
+     * Menyimpan booking ke database dan redirect ke checkout.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'studio_id' => 'required|exists:studios,id',
+        ]);
+
+        $studio = Studio::findOrFail($request->studio_id);
+        $total_price = $studio->price_per_hour; // Harga per jam (bisa dikembangkan)
+
+        $booking = Booking::create([
+            'user_id' => Auth::id(),
+            'studio_id' => $studio->id,
+            'total_price' => $total_price,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('booking.checkout', $booking->id);
+    }
+
+    /**
+     * Menampilkan halaman checkout.
+     */
+    // public function checkout($id)
+    // {
+    //     $booking = Booking::with('studio')->findOrFail($id);
+        
+    //     // Konfigurasi Midtrans
+    //     Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    //     Config::$isProduction = false;
+    //     Config::$isSanitized = true;
+    //     Config::$is3ds = true;
+
+    //     // Jika sudah punya snap token, gunakan kembali
+    //     if (!$booking->snap_token) {
+    //         $transaction = [
+    //             'transaction_details' => [
+    //                 'order_id' => $booking->id,
+    //                 'gross_amount' => $booking->total_price,
+    //             ],
+    //             'customer_details' => [
+    //                 'email' => Auth::user()->email,
+    //             ],
+    //         ];
+
+    //         $snapToken = Snap::getSnapToken($transaction);
+    //         $booking->snap_token = $snapToken;
+    //         $booking->save();
+    //     }
+
+    //     return view('booking.checkout', compact('booking'));
+    // }
+
+    public function checkout($id)
+{
+    $booking = Booking::with('studio')->findOrFail($id);
+    return view('booking.checkout', compact('booking'));
+}
+
+    /**
+     * Callback dari Midtrans setelah pembayaran.
+     */
+    public function callback(Request $request)
+    {
+        $booking = Booking::findOrFail($request->order_id);
+
+        if ($request->transaction_status == 'settlement') {
+            $booking->status = 'paid';
+        } elseif ($request->transaction_status == 'cancel') {
+            $booking->status = 'canceled';
+        }
+
+        $booking->save();
     }
 
 }
