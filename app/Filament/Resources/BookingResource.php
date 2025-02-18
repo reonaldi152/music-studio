@@ -6,12 +6,11 @@ use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Studio;
-use App\Models\RecordingRoom;
-use App\Models\MusicEquipment;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -36,14 +35,16 @@ class BookingResource extends Resource
                         ->label('Studio')
                         ->relationship('studio', 'name')
                         ->nullable(),
-                    Select::make('recording_room_id')
-                        ->label('Ruang Rekaman')
-                        ->relationship('recordingRoom', 'name')
-                        ->nullable(),
-                    Select::make('equipment_id')
-                        ->label('Alat Musik')
-                        ->relationship('equipment', 'name')
-                        ->nullable(),
+                    Checkbox::make('add_recording')
+                        ->label('Tambahkan Rekaman (Rp 200.000)')
+                        ->default(false),
+                    CheckboxList::make('music_equipment')
+                        ->label('Pilih Alat Musik (Rp 50.000 per alat)')
+                        ->options([
+                            'gitar' => 'Gitar',
+                            'ampli' => 'Ampli',
+                        ])
+                        ->columns(2),
                     Select::make('status')
                         ->label('Status Booking')
                         ->options([
@@ -62,9 +63,27 @@ class BookingResource extends Resource
             ->columns([
                 TextColumn::make('user.name')->label('Customer')->sortable(),
                 TextColumn::make('studio.name')->label('Studio')->sortable(),
-                TextColumn::make('recordingRoom.name')->label('Ruang Rekaman')->sortable(),
-                TextColumn::make('equipment.name')->label('Alat Musik')->sortable(),
                 TextColumn::make('status')->label('Status')->sortable(),
+                TextColumn::make('add_recording')
+                    ->label('Rekaman')
+                    ->badge()
+                    ->colors([
+                        'success' => fn ($state) => $state == true,
+                        'danger' => fn ($state) => $state == false,
+                    ])
+                    ->formatStateUsing(fn ($state) => $state ? 'Ya' : 'Tidak'),
+
+                // Pastikan alat musik tetap dalam format array
+                TextColumn::make('music_equipment')
+                    ->label('Alat Musik')
+                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : 'Tidak ada'),
+
+                // Perbaikan tampilan total harga
+                TextColumn::make('total_price')
+                    ->label('Total Harga')
+                    ->formatStateUsing(fn ($state) => $state !== null ? 'IDR ' . number_format((int) $state, 2, ',', '.') : 'IDR 0,00')
+                    ->sortable(),
+
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime(),
             ])
             ->filters([
@@ -76,13 +95,13 @@ class BookingResource extends Resource
                         'canceled' => 'Canceled',
                     ]),
             ])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
-            ->bulkActions([Tables\Actions\DeleteBulkAction::make()]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [];
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make()
+            ]);
     }
 
     public static function getPages(): array
