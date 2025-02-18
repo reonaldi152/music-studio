@@ -12,18 +12,30 @@
     
     <!-- Navbar -->
     <nav class="fixed top-0 z-50 flex items-center justify-between w-full px-6 py-4 bg-black shadow-md">
-        <div class="text-xl font-bold">MD MUSIC STUDIO</div>
+        <div class="text-xl font-bold"><a href="/">MD MUSIC STUDIO</a></div>
         <div class="hidden space-x-6 md:flex">
             <a href="{{ route('home') }}" class="hover:text-gray-400">Beranda</a>
             <a href="{{ route('about') }}" class="hover:text-gray-400">Tentang Kami</a>
             <a href="{{ route('services') }}" class="hover:text-gray-400">Layanan</a>
             <a href="{{ route('booking.index') }}" class="hover:text-gray-400">Pemesanan</a>
         </div>
+    
         <div class="space-x-4">
-            <a href="{{ route('login') }}" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">Login</a>
-            <a href="{{ route('register') }}" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Register</a>
+            @auth
+                <a href="{{ route('profile') }}" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">
+                    Profile ({{ Auth::user()->name }})
+                </a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">Login</a>
+                <a href="{{ route('register') }}" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Register</a>
+            @endauth
         </div>
     </nav>
+    
 
     <!-- Content -->
     <main class="pt-20">

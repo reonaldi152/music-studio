@@ -12,14 +12,11 @@
     <div class="relative text-center">
         <h1 class="text-4xl font-bold md:text-6xl">Selamat Datang di MD Music Studio</h1>
         <p class="mt-4 text-lg md:text-xl">Tempat terbaik untuk rekaman dan latihan musik Anda</p>
-        {{-- <a href="{{ route('booking.index') }}"
-            class="inline-block px-6 py-3 mt-6 text-lg font-semibold bg-red-600 rounded-lg hover:bg-red-700">
-            Pesan Sekarang
-        </a> --}}
-        <a href=""
+        <a href="{{ route('booking.index') }}"
             class="inline-block px-6 py-3 mt-6 text-lg font-semibold bg-red-600 rounded-lg hover:bg-red-700">
             Pesan Sekarang
         </a>
+        
     </div>
 </section>
 
