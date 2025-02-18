@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('studio_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('booking_code')->nullable();
+            $table->uuid('booking_code')->unique();
             $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
             $table->boolean('add_recording')->default(false);
             $table->json('music_equipment')->nullable();
-            $table->integer('total_price')->default(0);
+            $table->decimal('total_price', 10, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -22,33 +23,31 @@ class Booking extends Model
     protected $casts = [
         'music_equipment' => 'array',
         'add_recording' => 'boolean',
-        'total_price' => 'integer', // Pastikan ini integer
+        'total_price' => 'decimal:2',
     ];
 
     protected static function boot()
     {
         parent::boot();
+
+        // Set default booking_code
+        static::creating(function ($booking) {
+            if (!$booking->booking_code) {
+                $booking->booking_code = Str::uuid();
+            }
+        });
     }
 
-    /**
-     * Pastikan total_price tidak berubah jadi 0 saat diambil
-     */
     public function getTotalPriceAttribute($value)
     {
-        return $value !== null ? (int) $value : 0;
+        return $value !== null ? (float) $value : 0.00;
     }
 
-    /**
-     * Relasi ke User (Customer)
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relasi ke Studio
-     */
     public function studio()
     {
         return $this->belongsTo(Studio::class);
