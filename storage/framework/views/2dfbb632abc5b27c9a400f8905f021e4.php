@@ -1,14 +1,13 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Checkout'); ?>
 
-@section('title', 'Checkout')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <section class="py-16 bg-lightDark">
         <div class="container mx-auto text-center">
             <h2 class="text-3xl font-bold text-white">Checkout</h2>
             <p class="mt-4 text-lg text-gray-300">
-                Total Pembayaran: Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                Total Pembayaran: Rp <?php echo e(number_format($booking->total_price, 0, ',', '.')); ?>
+
             </p>
 
             <button id="pay-button"
@@ -18,7 +17,7 @@
         </div>
     </section>
 
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?php echo e(env('MIDTRANS_CLIENT_KEY')); ?>"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const payButton = document.getElementById("pay-button");
@@ -27,14 +26,14 @@
 
             payButton.addEventListener("click", async function() {
                 try {
-                    const response = await fetch("{{ route('payment.create') }}", {
+                    const response = await fetch("<?php echo e(route('payment.create')); ?>", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
                         },
                         body: JSON.stringify({
-                            booking_id: "{{ $booking->id }}"
+                            booking_id: "<?php echo e($booking->id); ?>"
                         })
                     });
 
@@ -57,4 +56,6 @@
         });
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\music-studio\resources\views/booking/checkout.blade.php ENDPATH**/ ?>

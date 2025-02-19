@@ -43,6 +43,7 @@ class BookingResource extends Resource
                         ->options([
                             'gitar' => 'Gitar',
                             'ampli' => 'Ampli',
+                            'recording' => 'Recording',
                         ])
                         ->columns(2),
                     Select::make('status')

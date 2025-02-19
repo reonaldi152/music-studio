@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'MD Music Studio')</title>
-    @vite('resources/css/app.css')
+    <title><?php echo $__env->yieldContent('title', 'MD Music Studio'); ?></title>
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 
@@ -15,31 +15,31 @@
     <nav class="fixed top-0 z-50 flex items-center justify-between w-full px-6 py-4 bg-black shadow-md">
         <div class="text-xl font-bold"><a href="/">MD MUSIC STUDIO</a></div>
         <div class="hidden space-x-6 md:flex">
-            <a href="{{ route('home') }}" class="hover:text-gray-400">Beranda</a>
-            <a href="{{ route('about') }}" class="hover:text-gray-400">Tentang Kami</a>
-            <a href="{{ route('services') }}" class="hover:text-gray-400">Layanan</a>
-            <a href="{{ route('booking.index') }}" class="hover:text-gray-400">Pemesanan</a>
+            <a href="<?php echo e(route('home')); ?>" class="hover:text-gray-400">Beranda</a>
+            <a href="<?php echo e(route('about')); ?>" class="hover:text-gray-400">Tentang Kami</a>
+            <a href="<?php echo e(route('services')); ?>" class="hover:text-gray-400">Layanan</a>
+            <a href="<?php echo e(route('booking.index')); ?>" class="hover:text-gray-400">Pemesanan</a>
         </div>
 
         <div class="space-x-4">
-            @auth
-                <a href="{{ route('profile') }}" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">
-                    Profile ({{ Auth::user()->name }})
+            <?php if(auth()->guard()->check()): ?>
+                <a href="<?php echo e(route('profile')); ?>" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">
+                    Profile (<?php echo e(Auth::user()->name); ?>)
                 </a>
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
+                <form action="<?php echo e(route('logout')); ?>" method="POST" class="inline">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Logout</button>
                 </form>
-            @else
-                <a href="{{ route('login') }}" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">Login</a>
-                <a href="{{ route('register') }}" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Register</a>
-            @endauth
+            <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">Login</a>
+                <a href="<?php echo e(route('register')); ?>" class="px-4 py-2 bg-red-700 rounded hover:bg-red-800">Register</a>
+            <?php endif; ?>
         </div>
     </nav>
 
     <!-- Content -->
     <main class="pt-20">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <!-- Footer -->
@@ -85,3 +85,4 @@
 </body>
 
 </html>
+<?php /**PATH C:\laragon\www\music-studio\resources\views/layouts/app.blade.php ENDPATH**/ ?>

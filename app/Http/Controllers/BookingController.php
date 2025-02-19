@@ -77,10 +77,11 @@ class BookingController extends Controller
     {
         $request->validate([
             'studio_id' => 'required|exists:studios,id',
+            'total_price' => 'required|numeric|min:0'
         ]);
 
         $studio = Studio::findOrFail($request->studio_id);
-        $total_price = $studio->price_per_hour; // Harga per jam (bisa dikembangkan)
+        $total_price = $request->total_price; // Menggunakan total harga dari form
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -89,8 +90,9 @@ class BookingController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('booking.checkout', $booking->id);
+        return redirect()->route('booking.checkout', ['id' => $booking->id]);
     }
+
 
     /**
      * Menampilkan halaman checkout.
@@ -98,7 +100,7 @@ class BookingController extends Controller
     // public function checkout($id)
     // {
     //     $booking = Booking::with('studio')->findOrFail($id);
-        
+
     //     // Konfigurasi Midtrans
     //     Config::$serverKey = env('MIDTRANS_SERVER_KEY');
     //     Config::$isProduction = false;

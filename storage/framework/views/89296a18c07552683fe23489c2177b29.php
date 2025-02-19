@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Tentang Kami - MD Music Studio'); ?>
 
-@section('title', 'Tentang Kami - MD Music Studio')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <section class="py-16 bg-gray-900">
         <div class="container px-6 mx-auto text-center">
@@ -20,4 +18,6 @@
         </div>
     </section>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\music-studio\resources\views/about.blade.php ENDPATH**/ ?>
