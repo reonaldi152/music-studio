@@ -31,13 +31,24 @@ class BookingResource extends Resource
                         ->label('Customer')
                         ->relationship('user', 'name')
                         ->required(),
+
                     Select::make('studio_id')
                         ->label('Studio')
                         ->relationship('studio', 'name')
-                        ->nullable(),
+                        ->required(),
+
+                    Forms\Components\DateTimePicker::make('start_time')
+                        ->label('Waktu Mulai')
+                        ->required(),
+
+                    Forms\Components\DateTimePicker::make('end_time')
+                        ->label('Waktu Selesai')
+                        ->required(),
+
                     Checkbox::make('add_recording')
                         ->label('Tambahkan Rekaman (Rp 200.000)')
                         ->default(false),
+
                     CheckboxList::make('music_equipment')
                         ->label('Pilih Alat Musik (Rp 50.000 per alat)')
                         ->options([
@@ -46,6 +57,7 @@ class BookingResource extends Resource
                             'recording' => 'Recording',
                         ])
                         ->columns(2),
+
                     Select::make('status')
                         ->label('Status Booking')
                         ->options([
@@ -58,34 +70,16 @@ class BookingResource extends Resource
             ]);
     }
 
+
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
                 TextColumn::make('user.name')->label('Customer')->sortable(),
                 TextColumn::make('studio.name')->label('Studio')->sortable(),
+                TextColumn::make('start_time')->label('Mulai')->dateTime()->sortable(),
+                TextColumn::make('end_time')->label('Selesai')->dateTime()->sortable(),
                 TextColumn::make('status')->label('Status')->sortable(),
-                TextColumn::make('add_recording')
-                    ->label('Rekaman')
-                    ->badge()
-                    ->colors([
-                        'success' => fn ($state) => $state == true,
-                        'danger' => fn ($state) => $state == false,
-                    ])
-                    ->formatStateUsing(fn ($state) => $state ? 'Ya' : 'Tidak'),
-
-                // Pastikan alat musik tetap dalam format array
-                TextColumn::make('music_equipment')
-                    ->label('Alat Musik')
-                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : 'Tidak ada'),
-
-                // Perbaikan tampilan total harga
-                TextColumn::make('total_price')
-                    ->label('Total Harga')
-                    ->formatStateUsing(fn ($state) => $state !== null ? 'IDR ' . number_format((int) $state, 2, ',', '.') : 'IDR 0,00')
-                    ->sortable(),
-
-                TextColumn::make('created_at')->label('Dibuat Pada')->dateTime(),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -104,6 +98,7 @@ class BookingResource extends Resource
                 Tables\Actions\DeleteBulkAction::make()
             ]);
     }
+
 
     public static function getPages(): array
     {

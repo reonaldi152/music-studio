@@ -77,21 +77,26 @@ class BookingController extends Controller
     {
         $request->validate([
             'studio_id' => 'required|exists:studios,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
             'total_price' => 'required|numeric|min:0'
         ]);
 
         $studio = Studio::findOrFail($request->studio_id);
-        $total_price = $request->total_price; // Menggunakan total harga dari form
+        $total_price = $request->total_price;
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'studio_id' => $studio->id,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
             'total_price' => $total_price,
             'status' => 'pending',
         ]);
 
         return redirect()->route('booking.checkout', ['id' => $booking->id]);
     }
+
 
 
     /**
