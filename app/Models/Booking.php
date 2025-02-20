@@ -18,13 +18,17 @@ class Booking extends Model
         'add_recording',
         'music_equipment',
         'total_price',
-        'snap_token'
+        'snap_token',
+        'start_time',
+        'end_time'
     ];
 
     protected $casts = [
         'music_equipment' => 'array',
         'add_recording' => 'boolean',
         'total_price' => 'decimal:2',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
     ];
 
     protected static function boot()
