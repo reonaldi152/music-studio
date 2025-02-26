@@ -83,7 +83,15 @@ class BookingController extends Controller
         ]);
 
         $studio = Studio::findOrFail($request->studio_id);
-        $total_price = $request->total_price;
+        $total_price = $studio->price_per_hour;
+
+        if ($request->has('add_recording')) {
+            $total_price += 1000;
+        }
+
+        if ($request->has('music_equipment')) {
+            $total_price += count($request->music_equipment) * 1000;
+        }
 
         $booking = Booking::create([
             'user_id' => Auth::id(),

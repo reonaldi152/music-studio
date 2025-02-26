@@ -50,15 +50,15 @@
                     <!-- Tambahan Opsi -->
                     <div class="mt-6">
                         <label class="flex items-center space-x-3 cursor-pointer">
-                            <input type="checkbox" name="add_recording" id="add_recording" value="200000"
+                            <input type="checkbox" name="add_recording" id="add_recording" value="1000"
                                 class="w-5 h-5 text-red-600 form-checkbox">
-                            <span class="text-lg text-gray-300">Tambahkan Rekaman (Rp 200.000)</span>
+                            <span class="text-lg text-gray-300">Tambahkan Rekaman (Rp 1.000)</span>
                         </label>
                     </div>
 
                     <!-- Pilihan Alat Musik -->
                     <div class="mt-6">
-                        <p class="text-lg font-semibold text-white">Pilih Alat Musik (Rp 50.000 per alat)</p>
+                        <p class="text-lg font-semibold text-white">Pilih Alat Musik (Rp 1.000 per alat)</p>
                         <div class="grid grid-cols-2 gap-4 mt-3">
                             @php
                                 $equipmentList = ['Gitar', 'Ampli', 'Keyboard'];
@@ -66,7 +66,7 @@
                             @foreach ($equipmentList as $equipment)
                                 <label
                                     class="flex items-center p-3 space-x-3 transition bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600">
-                                    <input type="checkbox" name="music_equipment[]" value="50000"
+                                    <input type="checkbox" name="music_equipment[]" value="1000"
                                         class="w-5 h-5 text-red-600 form-checkbox equipment">
                                     <span class="text-lg text-gray-300">{{ $equipment }}</span>
                                 </label>
@@ -95,34 +95,23 @@
     <!-- Script untuk Update Total Harga -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const addRecording = document.getElementById('add_recording');
-            const equipmentCheckboxes = document.querySelectorAll('.equipment');
-            const totalPriceElement = document.getElementById('total-price');
-            const totalPriceInput = document.getElementById('total_price_input');
-
-            if (!addRecording || !totalPriceElement || !totalPriceInput) return;
-
-            let basePrice = parseFloat({{ $studio->price_per_hour }});
-
             function calculateTotal() {
-                let total = basePrice;
+                let total = parseFloat({{ $studio->price_per_hour }});
 
-                if (addRecording.checked) {
-                    total += parseFloat(addRecording.value);
+                if (document.getElementById('add_recording').checked) {
+                    total += 1000;
                 }
 
-                equipmentCheckboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        total += parseFloat(checkbox.value);
-                    }
+                document.querySelectorAll('.equipment:checked').forEach(() => {
+                    total += 1000;
                 });
 
-                totalPriceElement.textContent = `Rp ${total.toLocaleString('id-ID')}`;
-                totalPriceInput.value = total;
+                document.getElementById('total-price').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+                document.getElementById('total_price_input').value = total;
             }
 
-            addRecording.addEventListener('change', calculateTotal);
-            equipmentCheckboxes.forEach(checkbox => {
+            document.getElementById('add_recording').addEventListener('change', calculateTotal);
+            document.querySelectorAll('.equipment').forEach(checkbox => {
                 checkbox.addEventListener('change', calculateTotal);
             });
 

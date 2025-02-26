@@ -46,11 +46,11 @@ class BookingResource extends Resource
                         ->required(),
 
                     Checkbox::make('add_recording')
-                        ->label('Tambahkan Rekaman (Rp 200.000)')
+                        ->label('Tambahkan Rekaman (Rp 1.000)')
                         ->default(false),
 
                     CheckboxList::make('music_equipment')
-                        ->label('Pilih Alat Musik (Rp 50.000 per alat)')
+                        ->label('Pilih Alat Musik (Rp 1.000 per alat)')
                         ->options([
                             'gitar' => 'Gitar',
                             'ampli' => 'Ampli',
