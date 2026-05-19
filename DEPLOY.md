@@ -280,7 +280,7 @@ sudo certbot renew --dry-run
 Buat file konfigurasi PM2:
 
 ```bash
-nano /var/www/music-studio/ecosystem.config.js
+nano /var/www/music-studio/ecosystem.config.cjs
 ```
 
 Isi:
@@ -331,7 +331,7 @@ Jalankan dengan PM2:
 
 ```bash
 cd /var/www/music-studio
-pm2 start ecosystem.config.js
+pm2 start ecosystem.config.cjs
 pm2 save
 pm2 startup
 ```

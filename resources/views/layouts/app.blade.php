@@ -18,36 +18,55 @@
             <a href="/" class="transition-transform duration-300 hover:scale-105">MD MUSIC STUDIO</a>
         </div>
 
-        <div class="hidden space-x-8 md:flex">
-            <a href="{{ route('home') }}"
-                class="text-gray-300 transition-colors duration-300 hover:text-white">Beranda</a>
-            <a href="{{ route('about') }}" class="text-gray-300 transition-colors duration-300 hover:text-white">Tentang
-                Kami</a>
-            <a href="{{ route('services') }}"
-                class="text-gray-300 transition-colors duration-300 hover:text-white">Layanan</a>
-            <a href="{{ route('booking.index') }}"
-                class="text-gray-300 transition-colors duration-300 hover:text-white">Pemesanan</a>
-        </div>
+        <!-- Hamburger Button (Mobile) -->
+        <button id="mobile-menu-btn" class="text-white md:hidden focus:outline-none" aria-label="Toggle Menu">
+            <i class="text-2xl fas fa-bars"></i>
+        </button>
 
-        <div class="space-x-4">
-            @auth
-                <a href="{{ route('profile') }}"
-                    class="px-5 py-2 text-white transition-transform duration-300 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 hover:scale-105">
-                    Profile ({{ Auth::user()->name }})
-                </a>
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit"
-                        class="px-5 py-2 text-white transition-transform duration-300 bg-red-700 rounded-lg shadow-md hover:bg-red-800 hover:scale-105">Logout</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}"
-                    class="px-5 py-2 text-white transition-transform duration-300 bg-red-600 rounded-lg shadow-md hover:bg-red-700 hover:scale-105">Login</a>
-                <a href="{{ route('register') }}"
-                    class="px-5 py-2 text-white transition-transform duration-300 bg-red-700 rounded-lg shadow-md hover:bg-red-800 hover:scale-105">Register</a>
-            @endauth
+        <!-- Menu & Auth -->
+        <div id="mobile-menu"
+            class="hidden absolute top-full left-0 w-full bg-black bg-opacity-95 flex-col items-center py-4 space-y-4 md:static md:flex md:flex-row md:items-center md:space-y-0 md:space-x-8 md:bg-transparent md:w-auto">
+
+            <div class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-8">
+                <a href="{{ route('home') }}"
+                    class="text-gray-300 transition-colors duration-300 hover:text-white">Beranda</a>
+                <a href="{{ route('about') }}"
+                    class="text-gray-300 transition-colors duration-300 hover:text-white">Tentang Kami</a>
+                <a href="{{ route('services') }}"
+                    class="text-gray-300 transition-colors duration-300 hover:text-white">Layanan</a>
+                <a href="{{ route('booking.index') }}"
+                    class="text-gray-300 transition-colors duration-300 hover:text-white">Pemesanan</a>
+            </div>
+
+            <div class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+                @auth
+                    <a href="{{ route('profile') }}"
+                        class="px-5 py-2 text-white transition-transform duration-300 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 hover:scale-105">
+                        Profile ({{ Auth::user()->name }})
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit"
+                            class="px-5 py-2 text-white transition-transform duration-300 bg-red-700 rounded-lg shadow-md hover:bg-red-800 hover:scale-105">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="px-5 py-2 text-white transition-transform duration-300 bg-red-600 rounded-lg shadow-md hover:bg-red-700 hover:scale-105">Login</a>
+                    <a href="{{ route('register') }}"
+                        class="px-5 py-2 text-white transition-transform duration-300 bg-red-700 rounded-lg shadow-md hover:bg-red-800 hover:scale-105">Register</a>
+                @endauth
+            </div>
         </div>
     </nav>
+
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        });
+    </script>
 
 
     <!-- Content -->
